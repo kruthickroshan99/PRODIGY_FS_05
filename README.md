@@ -25,7 +25,7 @@ The platform includes user profile management, a dynamic feed system, media shar
 
 1. Clone this repository:
    ```bash
-   https://github.com/yourusername/social-media-app
+   https://github.com/kruthickroshan99/PRODIGY_FS_05
    ```
 
 2. Run the application:
