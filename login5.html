@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SociaLink - Connect & Share</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #37b6ff 0%, #c9e7ff 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #66c2ea, #bfe1ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #5cd4ff, #c9edff);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn.secondary {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid #66c2ea;
+            color: #6ed8ff;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr 300px;
+            gap: 20px;
+            align-items: start;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                order: 2;
+            }
+            .feed {
+                order: 1;
+            }
+            .trending {
+                order: 3;
+            }
+        }
+
+        .sidebar, .trending {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .profile-card {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-pic {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #6fdafd, #b0f1ff);
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .feed {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+
+        .create-post {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .create-post textarea {
+            width: 100%;
+            min-height: 100px;
+            border: none;
+            background: transparent;
+            resize: vertical;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .upload-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .upload-btn {
+            background: none;
+            border: 2px solid #66c2ea;
+            color: #66d0ea;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .upload-btn:hover {
+            background: #66c7ea;
+            color: white;
+        }
+
+        .post {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .post:hover {
+            transform: translateY(-2px);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .post-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #66cbea, #b1eaff);
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .post-info h4 {
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .post-time {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .post-content {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .post-media {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .post-tags {
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            background: rgba(102, 126, 234, 0.1);
+            color: #66c2ea;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin-right: 5px;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+
+        .post-interactions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .interaction-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 12px;
+            border-radius: 20px;
+        }
+
+        .interaction-btn:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #66cbea;
+        }
+
+        .interaction-btn.liked {
+            color: #e74c3c;
+        }
+
+        .comments-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .comment {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .comment-input {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 10px 15px;
+            outline: none;
+            margin-top: 10px;
+        }
+
+        .notifications {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .notification {
+            background: #66c2ea;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            max-width: 300px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #66b5ea;
+        }
+
+        .user-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .user-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #66c2ea, #c2edff);
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .follow-btn {
+            margin-left: auto;
+            padding: 5px 15px;
+            font-size: 12px;
+        }
+
+        .trending-item {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: rgba(102, 126, 234, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .trending-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateX(5px);
+        }
+
+        .trending-tag {
+            font-weight: bold;
+            color: #66baea;
+        }
+
+        .trending-count {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .notification-badge {
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            color: #666;
+            padding: 20px;
+        }
+
+        .no-posts {
+            text-align: center;
+            color: #666;
+            padding: 40px;
+        }
+
+        .file-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            color: #333;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">SociaLink</div>
+            <div class="nav-buttons">
+                <button class="btn" onclick="showCreateProfile()">Create Profile</button>
+                <button class="btn secondary" onclick="showUserList()">Find Friends</button>
+                <button class="btn secondary" onclick="showNotifications()">
+                    Notifications <span id="notificationBadge" class="notification-badge hidden">0</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Left Sidebar -->
+            <div class="sidebar">
+                <div class="profile-card">
+                    <div class="profile-pic" id="currentUserAvatar">U</div>
+                    <h3 id="currentUserName">Create a Profile</h3>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <span class="stat-number" id="postsCount">0</span>
+                            <span class="stat-label">Posts</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="followersCount">0</span>
+                            <span class="stat-label">Followers</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="followingCount">0</span>
+                            <span class="stat-label">Following</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="user-list" id="followingList">
+                    <h4>Following</h4>
+                    <div id="followingUsers"></div>
+                </div>
+            </div>
+
+            <!-- Main Feed -->
+            <div class="feed">
+                <!-- Create Post -->
+                <div class="create-post">
+                    <textarea id="postContent" placeholder="What's on your mind?"></textarea>
+                    <div class="post-actions">
+                        <div class="upload-options">
+                            <input type="file" id="imageUpload" accept="image/*,video/*" style="display: none;">
+                            <button class="upload-btn" onclick="document.getElementById('imageUpload').click()">📷 Media</button>
+                            <input type="text" id="postTags" placeholder="#tags" style="padding: 8px; border: 2px solid #ddd; border-radius: 20px; width: 150px;">
+                        </div>
+                        <button class="btn" onclick="createPost()">Share</button>
+                    </div>
+                    <div id="filePreview"></div>
+                </div>
+
+                <!-- Posts Container -->
+                <div id="postsContainer">
+                    <div class="no-posts">
+                        <h3>Welcome to SociaLink!</h3>
+                        <p>Create a profile and start sharing to see posts here.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar - Trending -->
+            <div class="trending">
+                <h4>Trending Tags</h4>
+                <div id="trendingTags"></div>
+
+                <h4 style="margin-top: 20px;">Suggested Users</h4>
+                <div id="suggestedUsers"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Profile Creation Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('profileModal')">&times;</button>
+            <h2>Create Your Profile</h2>
+            <form onsubmit="createProfile(event)">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" required>
+                </div>
+                <div class="form-group">
+                    <label for="bio">Bio</label>
+                    <textarea id="bio" rows="3" placeholder="Tell us about yourself..."></textarea>
+                </div>
+                <button type="submit" class="btn">Create Profile</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- User List Modal -->
+    <div id="userListModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('userListModal')">&times;</button>
+            <h2>Find Friends</h2>
+            <div id="allUsersList" class="user-list"></div>
+        </div>
+    </div>
+
+    <!-- Notifications Modal -->
+    <div id="notificationsModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('notificationsModal')">&times;</button>
+            <h2>Notifications</h2>
+            <div id="notificationsList"></div>
+        </div>
+    </div>
+
+    <!-- Notifications Container -->
+    <div class="notifications" id="notificationsContainer"></div>
+
+    <script>
+        // Data Storage
+        let users = [
+            {
+                id: 1,
+                username: 'alice_wonder',
+                fullName: 'Alice Johnson',
+                bio: 'Adventure seeker and coffee lover ☕',
+                followers: [],
+                following: [],
+                avatar: 'A'
+            },
+            {
+                id: 2,
+                username: 'tech_guru',
+                fullName: 'Bob Smith',
+                bio: 'Software developer passionate about innovation',
+                followers: [],
+                following: [],
+                avatar: 'B'
+            },
+            {
+                id: 3,
+                username: 'artsy_emma',
+                fullName: 'Emma Davis',
+                bio: 'Digital artist and creative soul 🎨',
+                followers: [],
+                following: [],
+                avatar: 'E'
+            }
+        ];
+
+        let posts = [
+            {
+                id: 1,
+                userId: 1,
+                content: 'Just had the most amazing coffee at the new café downtown! The atmosphere is perfect for working on creative projects. ☕️',
+                timestamp: new Date(Date.now() - 3600000),
+                likes: [],
+                comments: [
+                    {id: 1, userId: 2, content: 'Which café? I need a new workspace!', timestamp: new Date(Date.now() - 1800000)}
+                ],
+                tags: ['coffee', 'downtown', 'workspace'],
+                media: null
+            },
+            {
+                id: 2,
+                userId: 2,
+                content: 'Working on an exciting new project using AI and machine learning. The possibilities are endless! 🤖',
+                timestamp: new Date(Date.now() - 7200000),
+                likes: [1, 3],
+                comments: [],
+                tags: ['AI', 'tech', 'innovation'],
+                media: null
+            },
+            {
+                id: 3,
+                userId: 3,
+                content: 'Finished my latest digital artwork today. Art has this amazing way of expressing what words cannot. 🎨✨',
+                timestamp: new Date(Date.now() - 14400000),
+                likes: [1],
+                comments: [
+                    {id: 2, userId: 1, content: 'Beautiful work! Love your style', timestamp: new Date(Date.now() - 3600000)}
+                ],
+                tags: ['art', 'digital', 'creative'],
+                media: null
+            }
+        ];
+
+        let currentUser = null;
+        let notifications = [];
+        let selectedFile = null;
+
+        // Initialize App
+        function initApp() {
+            updateUI();
+            updateTrending();
+            updateSuggestedUsers();
+        }
+
+        // Profile Management
+        function showCreateProfile() {
+            document.getElementById('profileModal').style.display = 'block';
+        }
+
+        function createProfile(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const fullName = document.getElementById('fullName').value;
+            const bio = document.getElementById('bio').value;
+
+            // Check if username already exists
+            if (users.find(u => u.username === username)) {
+                alert('Username already exists!');
+                return;
+            }
+
+            currentUser = {
+                id: users.length + 1,
+                username,
+                fullName,
+                bio,
+                followers: [],
+                following: [],
+                avatar: fullName.charAt(0).toUpperCase()
+            };
+
+            users.push(currentUser);
+            closeModal('profileModal');
+            updateUI();
+            showNotification('Profile created successfully!');
+        }
+
+        // Post Management
+        function createPost() {
+            if (!currentUser) {
+                alert('Please create a profile first!');
+                return;
+            }
+
+            const content = document.getElementById('postContent').value.trim();
+            if (!content) {
+                alert('Please enter some content!');
+                return;
+            }
+
+            const tags = document.getElementById('postTags').value
+                .split('#')
+                .filter(tag => tag.trim())
+                .map(tag => tag.trim().toLowerCase());
+
+            const newPost = {
+                id: posts.length + 1,
+                userId: currentUser.id,
+                content,
+                timestamp: new Date(),
+                likes: [],
+                comments: [],
+                tags,
+                media: selectedFile
+            };
+
+            posts.unshift(newPost);
+            
+            // Clear form
+            document.getElementById('postContent').value = '';
+            document.getElementById('postTags').value = '';
+            document.getElementById('filePreview').innerHTML = '';
+            selectedFile = null;
+
+            updateUI();
+            updateTrending();
+            showNotification('Post shared successfully!');
+        }
+
+        function likePost(postId) {
+            if (!currentUser) {
+                alert('Please create a profile first!');
+                return;
+            }
+
+            const post = posts.find(p => p.id === postId);
+            const likeIndex = post.likes.indexOf(currentUser.id);
+
+            if (likeIndex === -1) {
+                post.likes.push(currentUser.id);
+                if (post.userId !== currentUser.id) {
+                    addNotification(`${currentUser.fullName} liked your post`, post.userId);
+                }
+                showNotification('Post liked!');
+            } else {
+                post.likes.splice(likeIndex, 1);
+                showNotification('Like removed');
+            }
+
+            updateUI();
+        }
+
+        function addComment(postId) {
+            if (!currentUser) {
+                alert('Please create a profile first!');
+                return;
+            }
+
+            const commentInput = document.getElementById(`comment-input-${postId}`);
+            const commentText = commentInput.value.trim();
+
+            if (!commentText) return;
+
+            const post = posts.find(p => p.id === postId);
+            const newComment = {
+                id: Date.now(),
+                userId: currentUser.id,
+                content: commentText,
+                timestamp: new Date()
+            };
+
+            post.comments.push(newComment);
+            commentInput.value = '';
+
+            if (post.userId !== currentUser.id) {
+                addNotification(`${currentUser.fullName} commented on your post`, post.userId);
+            }
+
+            updateUI();
+            showNotification('Comment added!');
+        }
+
+        function toggleComments(postId) {
+            const commentsSection = document.getElementById(`comments-${postId}`);
+            commentsSection.classList.toggle('hidden');
+        }
+
+        // Follow System
+        function followUser(userId) {
+            if (!currentUser || userId === currentUser.id) return;
+
+            const targetUser = users.find(u => u.id === userId);
+            const isFollowing = currentUser.following.includes(userId);
+
+            if (isFollowing) {
+                currentUser.following = currentUser.following.filter(id => id !== userId);
+                targetUser.followers = targetUser.followers.filter(id => id !== currentUser.id);
+                showNotification(`Unfollowed ${targetUser.fullName}`);
+            } else {
+                currentUser.following.push(userId);
+                targetUser.followers.push(currentUser.id);
+                addNotification(`${currentUser.fullName} started following you`, userId);
+                showNotification(`Now following ${targetUser.fullName}!`);
+            }
+
+            updateUI();
+            updateSuggestedUsers();
+        }
+
+        // File Upload
+        document.getElementById('imageUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    selectedFile = {
+                        type: file.type.startsWith('image/') ? 'image' : 'video',
+                        data: e.target.result,
+                        name: file.name
+                    };
+
+                    const preview = document.getElementById('filePreview');
+                    if (file.type.startsWith('image/')) {
+                        preview.innerHTML = `<img src="${e.target.result}" class="file-preview" alt="Preview">`;
+                    } else if (file.type.startsWith('video/')) {
+                        preview.innerHTML = `<video src="${e.target.result}" class="file-preview" controls></video>`;
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // UI Updates
+        function updateUI() {
+            updateCurrentUserProfile();
+            renderPosts();
+            renderFollowingList();
+        }
+
+        function updateCurrentUserProfile() {
+            if (currentUser) {
+                document.getElementById('currentUserAvatar').textContent = currentUser.avatar;
+                document.getElementById('currentUserName').textContent = currentUser.fullName;
+                document.getElementById('postsCount').textContent = posts.filter(p => p.userId === currentUser.id).length;
+                document.getElementById('followersCount').textContent = currentUser.followers.length;
+                document.getElementById('followingCount').textContent = currentUser.following.length;
+            }
+        }
+
+        function renderPosts() {
+            const container = document.getElementById('postsContainer');
+            
+            if (posts.length === 0) {
+                container.innerHTML = `
+                    <div class="no-posts">
+                        <h3>No posts yet</h3>
+                        <p>Be the first to share something!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const visiblePosts = currentUser ? 
+                posts.filter(post => 
+                    post.userId === currentUser.id || 
+                    currentUser.following.includes(post.userId) ||
+                    !currentUser.following.length
+                ) : posts;
+
+            container.innerHTML = visiblePosts.map(post => {
+                const user = users.find(u => u.id === post.userId);
+                const isLiked = currentUser ? post.likes.includes(currentUser.id) : false;
+                const timeAgo = getTimeAgo(post.timestamp);
+
+                return `
+                    <div class="post">
+                        <div class="post-header">
+                            <div class="post-avatar">${user.avatar}</div>
+                            <div class="post-info">
+                                <h4>${user.fullName}</h4>
+                                <div class="post-time">${timeAgo}</div>
+                            </div>
+                        </div>
+                        <div class="post-content">${post.content}</div>
+                        
+                        ${post.media ? `
+                            <div class="post-media">
+                                ${post.media.type === 'image' ? 
+                                    `<img src="${post.media.data}" alt="Post media" style="max-width: 100%; border-radius: 10px;">` :
+                                    `<video src="${post.media.data}" controls style="max-width: 100%; border-radius: 10px;"></video>`
+                                }
+                            </div>
+                        ` : ''}
+
+                        <div class="post-tags">
+                            ${post.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+                        </div>
+
+                        <div class="post-interactions">
+                            <button class="interaction-btn ${isLiked ? 'liked' : ''}" onclick="likePost(${post.id})">
+                                ❤️ ${post.likes.length}
+                            </button>
+                            <button class="interaction-btn" onclick="toggleComments(${post.id})">
+                                💬 ${post.comments.length}
+                            </button>
+                            <button class="interaction-btn">
+                                🔄 Share
+                            </button>
+                        </div>
+
+                        <div id="comments-${post.id}" class="comments-section hidden">
+                            ${post.comments.map(comment => {
+                                const commentUser = users.find(u => u.id === comment.userId);
+                                return `
+                                    <div class="comment">
+                                        <strong>${commentUser.fullName}:</strong> ${comment.content}
+                                        <div style="font-size: 12px; color: #666; margin-top: 5px;">${getTimeAgo(comment.timestamp)}</div>
+                                    </div>
+                                `;
+                            }).join('')}
+                            ${currentUser ? `
+                                <input type="text" id="comment-input-${post.id}" class="comment-input" placeholder="Write a comment..." onkeypress="if(event.key==='Enter') addComment(${post.id})">
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderFollowingList() {
+            if (!currentUser) return;
+
+            const container = document.getElementById('followingUsers');
+            if (currentUser.following.length === 0) {
+                container.innerHTML = '<p style="color: #666; text-align: center; padding: 10px;">No one followed yet</p>';
+                return;
+            }
+
+            container.innerHTML = currentUser.following.map(userId => {
+                const user = users.find(u => u.id === userId);
+                return `
+                    <div class="user-item">
+                        <div class="user-avatar">${user.avatar}</div>
+                        <div>
+                            <div style="font-weight: 500;">${user.fullName}</div>
+                            <div style="font-size: 12px; color: #666;">@${user.username}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function showUserList() {
+            const container = document.getElementById('allUsersList');
+            container.innerHTML = users.filter(u => u.id !== (currentUser?.id || 0)).map(user => {
+                const isFollowing = currentUser ? currentUser.following.includes(user.id) : false;
+                return `
+                    <div class="user-item">
+                        <div class="user-avatar">${user.avatar}</div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 500;">${user.fullName}</div>
+                            <div style="font-size: 12px; color: #666;">@${user.username}</div>
+                            <div style="font-size: 12px; color: #888; margin-top: 2px;">${user.bio}</div>
+                        </div>
+                        ${currentUser ? `
+                            <button class="btn follow-btn ${isFollowing ? 'secondary' : ''}" onclick="followUser(${user.id})">
+                                ${isFollowing ? 'Unfollow' : 'Follow'}
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('userListModal').style.display = 'block';
+        }
+
+        function updateTrending() {
+            const tagCount = {};
+            posts.forEach(post => {
+                post.tags.forEach(tag => {
+                    tagCount[tag] = (tagCount[tag] || 0) + 1;
+                });
+            });
+
+            const trending = Object.entries(tagCount)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 5);
+
+            const container = document.getElementById('trendingTags');
+            if (trending.length === 0) {
+                container.innerHTML = '<p style="color: #666;">No trending tags yet</p>';
+                return;
+            }
+
+            container.innerHTML = trending.map(([tag, count]) => `
+                <div class="trending-item" onclick="searchByTag('${tag}')">
+                    <div class="trending-tag">#${tag}</div>
+                    <div class="trending-count">${count} posts</div>
+                </div>
+            `).join('');
+        }
+
+        function updateSuggestedUsers() {
+            if (!currentUser) return;
+
+            const suggested = users
+                .filter(u => u.id !== currentUser.id && !currentUser.following.includes(u.id))
+                .slice(0, 3);
+
+            const container = document.getElementById('suggestedUsers');
+            container.innerHTML = suggested.map(user => `
+                <div class="user-item" onclick="followUser(${user.id})">
+                    <div class="user-avatar">${user.avatar}</div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 500; font-size: 14px;">${user.fullName}</div>
+                        <div style="font-size: 11px; color: #666;">@${user.username}</div>
+                    </div>
+                    <button class="btn follow-btn" onclick="event.stopPropagation(); followUser(${user.id})">
+                        Follow
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function searchByTag(tag) {
+            const tagPosts = posts.filter(post => post.tags.includes(tag));
+            showNotification(`Found ${tagPosts.length} posts with #${tag}`);
+            
+            // Filter posts by tag temporarily
+            const container = document.getElementById('postsContainer');
+            if (tagPosts.length === 0) {
+                container.innerHTML = `<div class="no-posts"><h3>No posts found with #${tag}</h3></div>`;
+                return;
+            }
+
+            container.innerHTML = tagPosts.map(post => {
+                const user = users.find(u => u.id === post.userId);
+                const isLiked = currentUser ? post.likes.includes(currentUser.id) : false;
+                const timeAgo = getTimeAgo(post.timestamp);
+
+                return `
+                    <div class="post">
+                        <div class="post-header">
+                            <div class="post-avatar">${user.avatar}</div>
+                            <div class="post-info">
+                                <h4>${user.fullName}</h4>
+                                <div class="post-time">${timeAgo}</div>
+                            </div>
+                        </div>
+                        <div class="post-content">${post.content}</div>
+                        
+                        ${post.media ? `
+                            <div class="post-media">
+                                ${post.media.type === 'image' ? 
+                                    `<img src="${post.media.data}" alt="Post media" style="max-width: 100%; border-radius: 10px;">` :
+                                    `<video src="${post.media.data}" controls style="max-width: 100%; border-radius: 10px;"></video>`
+                                }
+                            </div>
+                        ` : ''}
+
+                        <div class="post-tags">
+                            ${post.tags.map(tag => `<span class="tag">#${tag}</span>`).join('')}
+                        </div>
+
+                        <div class="post-interactions">
+                            <button class="interaction-btn ${isLiked ? 'liked' : ''}" onclick="likePost(${post.id})">
+                                ❤️ ${post.likes.length}
+                            </button>
+                            <button class="interaction-btn" onclick="toggleComments(${post.id})">
+                                💬 ${post.comments.length}
+                            </button>
+                            <button class="interaction-btn">
+                                🔄 Share
+                            </button>
+                        </div>
+
+                        <div id="comments-${post.id}" class="comments-section hidden">
+                            ${post.comments.map(comment => {
+                                const commentUser = users.find(u => u.id === comment.userId);
+                                return `
+                                    <div class="comment">
+                                        <strong>${commentUser.fullName}:</strong> ${comment.content}
+                                        <div style="font-size: 12px; color: #666; margin-top: 5px;">${getTimeAgo(comment.timestamp)}</div>
+                                    </div>
+                                `;
+                            }).join('')}
+                            ${currentUser ? `
+                                <input type="text" id="comment-input-${post.id}" class="comment-input" placeholder="Write a comment..." onkeypress="if(event.key==='Enter') addComment(${post.id})">
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Notifications
+        function addNotification(message, targetUserId) {
+            const notification = {
+                id: Date.now(),
+                message,
+                targetUserId,
+                timestamp: new Date(),
+                read: false
+            };
+
+            notifications.push(notification);
+            updateNotificationBadge();
+        }
+
+        function showNotifications() {
+            const userNotifications = currentUser ? 
+                notifications.filter(n => n.targetUserId === currentUser.id) : [];
+
+            const container = document.getElementById('notificationsList');
+            if (userNotifications.length === 0) {
+                container.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">No notifications yet</p>';
+            } else {
+                container.innerHTML = userNotifications.map(notification => `
+                    <div class="notification" style="position: static; margin: 10px 0; max-width: none;">
+                        <div>${notification.message}</div>
+                        <div style="font-size: 12px; opacity: 0.8; margin-top: 5px;">${getTimeAgo(notification.timestamp)}</div>
+                    </div>
+                `).join('');
+
+                // Mark notifications as read
+                userNotifications.forEach(n => n.read = true);
+                updateNotificationBadge();
+            }
+
+            document.getElementById('notificationsModal').style.display = 'block';
+        }
+
+        function updateNotificationBadge() {
+            if (!currentUser) return;
+
+            const unreadCount = notifications.filter(n => 
+                n.targetUserId === currentUser.id && !n.read
+            ).length;
+
+            const badge = document.getElementById('notificationBadge');
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function showNotification(message) {
+            const container = document.getElementById('notificationsContainer');
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            container.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Utility Functions
+        function getTimeAgo(timestamp) {
+            const now = new Date();
+            const diff = now - timestamp;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+
+            if (minutes < 1) return 'Just now';
+            if (minutes < 60) return `${minutes}m ago`;
+            if (hours < 24) return `${hours}h ago`;
+            return `${days}d ago`;
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.style.display = 'none';
+                });
+            }
+        });
+
+        // Auto-refresh trending content every 30 seconds
+        setInterval(() => {
+            updateTrending();
+            updateSuggestedUsers();
+        }, 30000);
+
+        // Initialize the app
+        initApp();
+
+        // Demo mode - add some sample interactions
+        setTimeout(() => {
+            if (!currentUser) {
+                showNotification('Welcome! Create a profile to start using SociaLink');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
